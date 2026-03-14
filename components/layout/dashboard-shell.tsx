@@ -22,16 +22,16 @@ export function DashboardShell({
               <Bell className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Platform status</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">CareBridge AI</p>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold">Secure telehealth workspace</p>
-                <Badge variant="success" className="rounded-full">Live</Badge>
+                <p className="text-sm font-semibold">Connected care workspace</p>
+                <Badge variant="success" className="rounded-full">Online</Badge>
               </div>
             </div>
             <div className="hidden h-10 w-px bg-border/80 lg:block" />
             <div className="hidden items-center gap-2 lg:flex">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span className="text-sm text-muted-foreground">Role-protected access</span>
+              <span className="text-sm text-muted-foreground">Protected patient data</span>
             </div>
           </div>
         </div>

@@ -76,9 +76,9 @@ export function SymptomCheckerForm() {
               </div>
             </>
           ) : (
-            <p className="text-sm text-muted-foreground">
-              Results appear here after submission. The analyzer now uses the configured LLM key when available and falls back to a safe placeholder only if no key is configured.
-            </p>
+            <div className="rounded-[1.25rem] bg-muted/50 px-4 py-4 text-sm text-muted-foreground">
+              Share your symptoms to receive a structured care summary with possible conditions, recommended specialty, urgency, and practical next steps.
+            </div>
           )}
         </CardContent>
       </Card>

@@ -11,26 +11,26 @@ export default function LoginPage() {
         <section className="space-y-6">
           <Logo />
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground">Patient and doctor sign in</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground">CareBridge AI access</p>
             <h1 className="text-5xl font-semibold leading-[0.98] text-balance">
               Step into a calmer care workflow.
             </h1>
             <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-              Access schedules, secure messaging, visit rooms, and consultation notes from a single workspace designed for telehealth operations.
+              Access appointments, secure messaging, visit rooms, and records from one connected care workspace.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="surface-panel rounded-[1.75rem] p-4">
               <ShieldCheck className="h-5 w-5 text-primary" />
-              <p className="mt-4 text-sm font-semibold">Role-protected</p>
+              <p className="mt-4 text-sm font-semibold">Protected access</p>
             </div>
             <div className="surface-panel rounded-[1.75rem] p-4">
               <CalendarRange className="h-5 w-5 text-primary" />
-              <p className="mt-4 text-sm font-semibold">Visit scheduling</p>
+              <p className="mt-4 text-sm font-semibold">Appointment management</p>
             </div>
             <div className="surface-panel rounded-[1.75rem] p-4">
               <Activity className="h-5 w-5 text-primary" />
-              <p className="mt-4 text-sm font-semibold">Live care updates</p>
+              <p className="mt-4 text-sm font-semibold">Care coordination</p>
             </div>
           </div>
         </section>

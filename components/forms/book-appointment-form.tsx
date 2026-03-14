@@ -84,7 +84,7 @@ export function BookAppointmentForm({
       <CardHeader>
         <CardTitle>Book a consultation</CardTitle>
         <CardDescription>
-          Choose a specialist, then book from the doctor&apos;s configured weekly availability.
+          Choose a specialist, select your doctor, and confirm a visit time that fits your care plan.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -162,9 +162,6 @@ export function BookAppointmentForm({
               </p>
             ) : null}
             {state.error ? <p className="mb-3 text-sm text-rose-600">{state.error}</p> : null}
-            <p className="mb-3 text-sm text-muted-foreground">
-              After confirmation you will be redirected to Stripe Checkout to complete payment securely.
-            </p>
             <Button
               disabled={
                 pending ||

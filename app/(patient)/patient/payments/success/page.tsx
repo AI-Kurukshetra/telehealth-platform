@@ -22,7 +22,7 @@ export default async function PaymentSuccessPage({
       </CardHeader>
       <CardContent className="space-y-4 text-sm text-muted-foreground">
         <p>
-          Your consultation payment has been recorded. The appointment remains available in your dashboard with the Jitsi visit room.
+          Your payment has been confirmed and the appointment is ready in your dashboard.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild>

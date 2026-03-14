@@ -28,12 +28,12 @@ const features = [
   },
   {
     title: "Smart Scheduling",
-    description: "Fixed 30-minute slots, specialist filtering, and payment-aware booking flow.",
+    description: "Specialist search, structured availability, and a seamless booking experience.",
     icon: CalendarClock
   },
   {
     title: "Protected Records",
-    description: "Role-based access keeps consultations, notes, and prescriptions private.",
+    description: "Care records, notes, and prescriptions stay available to the right people.",
     icon: ShieldCheck
   }
 ];
@@ -66,7 +66,7 @@ export default function HomePage() {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/65 px-4 py-2 text-sm font-medium text-secondary-foreground backdrop-blur">
               <Sparkles className="h-4 w-4 text-primary" />
-              Telehealth MVP with patient engagement and AI triage
+              Telehealth care coordination with AI-assisted intake
             </div>
             <div className="space-y-5">
               <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[0.95] text-foreground md:text-6xl">
@@ -102,8 +102,8 @@ export default function HomePage() {
             <div className="relative space-y-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <Badge className="rounded-full bg-white/80 text-primary">Live care operations</Badge>
-                  <h2 className="mt-4 text-3xl font-semibold">What the MVP already covers</h2>
+                  <Badge className="rounded-full bg-white/80 text-primary">Connected care</Badge>
+                  <h2 className="mt-4 text-3xl font-semibold">Built for modern virtual care</h2>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-primary">
                   <Stethoscope className="h-5 w-5" />
@@ -112,9 +112,9 @@ export default function HomePage() {
 
               <Card className="border-white/50 bg-white/70">
                 <CardHeader>
-                  <CardTitle>Provider network snapshot</CardTitle>
+                  <CardTitle>Provider network</CardTitle>
                   <CardDescription>
-                    Demo specialist roster with consultation fees and booking-ready appointment slots.
+                    Explore specialties, experience, and consultation fees across the CareBridge AI network.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -122,10 +122,10 @@ export default function HomePage() {
                     <div key={doctor.id} className="flex items-center justify-between rounded-[1.4rem] bg-[#fffaf1] px-4 py-3">
                       <div>
                         <p className="font-semibold">{doctor.specialization}</p>
-                        <p className="text-sm text-muted-foreground">${doctor.consultation_fee} average consultation</p>
+                        <p className="text-sm text-muted-foreground">${doctor.consultation_fee} consultation fee</p>
                       </div>
                       <div className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                        Available
+                        Accepting visits
                       </div>
                     </div>
                   ))}

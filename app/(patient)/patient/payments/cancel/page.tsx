@@ -17,7 +17,7 @@ export default async function PaymentCancelPage({
       </CardHeader>
       <CardContent className="space-y-4 text-sm text-muted-foreground">
         <p>
-          Your appointment is still saved, but the payment is pending. You can reopen the appointment list and complete payment again at any time.
+          Your appointment is still reserved. You can return to the appointments page whenever you are ready to complete payment.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild>

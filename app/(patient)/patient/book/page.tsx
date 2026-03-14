@@ -13,17 +13,16 @@ export default async function PatientBookPage() {
       <BookAppointmentForm doctors={doctors} availability={availability} />
       <Card className="bg-white/95">
         <CardHeader>
-          <CardTitle>Booking guidance</CardTitle>
+          <CardTitle>What to expect</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            Booking creates the appointment first, then redirects to Stripe Checkout. Webhook or
-            return-page sync updates <code>payment_status</code> so pending appointments can be
-            retried safely from the appointments page.
+            Confirm your doctor, time, and payment to reserve the consultation. Your visit details
+            will appear immediately in your appointments dashboard.
           </p>
           <p>
-            Doctors only show the weekly slots they have configured, which reduces scheduling
-            conflicts and makes the booking flow production-ready.
+            If you need to make a change later, you can manage, reschedule, or cancel the booking
+            from your appointments page.
           </p>
         </CardContent>
       </Card>
