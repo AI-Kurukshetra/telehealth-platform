@@ -150,3 +150,28 @@ export interface SymptomAnalysis {
   urgencyLevel: "low" | "medium" | "high";
   basicAdvice: string[];
 }
+
+export interface VisitPrepAnalysis {
+  visitSummary: string;
+  urgencyLevel: "low" | "medium" | "high";
+  clinicianBrief: string;
+  recommendedQuestions: string[];
+  careChecklist: string[];
+  redFlags: string[];
+}
+
+export interface VisitPreparation {
+  id: string;
+  appointment_id: string;
+  doctor_id: string;
+  patient_id: string;
+  symptoms: string;
+  symptom_duration?: string | null;
+  current_medications?: string | null;
+  allergies?: string | null;
+  medical_history?: string | null;
+  visit_goals: string;
+  ai_summary: VisitPrepAnalysis;
+  created_at: string;
+  updated_at: string;
+}

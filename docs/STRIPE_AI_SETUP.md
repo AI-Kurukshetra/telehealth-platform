@@ -4,7 +4,7 @@ This document explains, in simple terms, how to set up:
 
 - Stripe Checkout
 - Stripe webhooks for local testing
-- the LLM key for the symptom analyzer
+- the LLM key for the symptom analyzer and AI visit prep copilot
 - end-to-end test steps
 
 ## 1. Required Environment Variables
@@ -31,7 +31,7 @@ Notes:
 - `STRIPE_SECRET_KEY` must be a Stripe **test mode** secret key.
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` must be the matching Stripe **test mode** publishable key.
 - `STRIPE_WEBHOOK_SECRET` comes from Stripe CLI webhook forwarding or from the Stripe Dashboard webhook endpoint.
-- `LLM_API_KEY` is used by the AI symptom analyzer.
+- `LLM_API_KEY` is used by the AI symptom analyzer and AI visit prep copilot.
 - `LLM_MODEL` is optional, but `gpt-4o-mini` is a good default for this app.
 
 ## 2. Apply Required Supabase SQL
@@ -45,7 +45,8 @@ Run these SQL files in Supabase SQL Editor in this order:
 5. [supabase/migrations/202603140005_fix_recursive_rls_functions.sql](/Users/apple/hackathon-project/supabase/migrations/202603140005_fix_recursive_rls_functions.sql)
 6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
 7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
-8. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+8. [supabase/migrations/202603140008_add_visit_preparations.sql](/Users/apple/hackathon-project/supabase/migrations/202603140008_add_visit_preparations.sql)
+9. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ## 3. Start The App
 
@@ -172,16 +173,17 @@ npm run dev
 
 ## 9. How AI Works In This App
 
-The symptom analyzer:
+The AI layer currently supports:
 
-1. sends patient symptoms to the server action
-2. uses the OpenAI Responses API
-3. requests structured JSON output
-4. returns:
-   - possible conditions
-   - recommended specialist
-   - urgency level
-   - basic advice
+1. symptom analysis for `/patient/symptom-checker`
+2. appointment-linked AI visit prep for `/patient/appointments`
+
+Both features:
+
+1. send structured patient input to a server action
+2. use the OpenAI Responses API
+3. request structured JSON output
+4. return patient-safe guidance instead of free-form raw text
 
 If `LLM_API_KEY` is missing, the app falls back to a safe placeholder result instead of crashing.
 
@@ -214,7 +216,19 @@ I have an itchy red rash on my hands for the last week and it gets worse after u
 My child has fever, sore throat, and low appetite since yesterday.
 ```
 
-## 11. Recommended Local Test Order
+## 11. How To Test AI Visit Prep Copilot
+
+1. Log in as a patient.
+2. Open `/patient/appointments`.
+3. Select a scheduled appointment.
+4. Complete the `AI visit prep copilot` form.
+5. Save the intake and confirm the AI summary appears in the sidebar.
+6. Log in as the assigned doctor.
+7. Open `/doctor/appointments`.
+8. Select the same appointment.
+9. Confirm the `AI visit prep brief` appears with the patient intake summary, urgency, and follow-up questions.
+
+## 12. Recommended Local Test Order
 
 Use this exact order:
 
@@ -224,9 +238,10 @@ Use this exact order:
 4. Confirm webhook updates payment status.
 5. Confirm pending payment retry works.
 6. Confirm AI analyzer returns structured output.
-7. Confirm patient and doctor dashboards still load after these flows.
+7. Confirm AI visit prep saves for patients and appears for doctors.
+8. Confirm patient and doctor dashboards still load after these flows.
 
-## 12. Useful Commands
+## 13. Useful Commands
 
 Start app:
 

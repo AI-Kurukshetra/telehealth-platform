@@ -16,7 +16,8 @@ import type {
   MedicalRecord,
   MedicalRecordWithDoctor,
   MedicalRecordWithPatient,
-  PatientProfile
+  PatientProfile,
+  VisitPreparation
 } from "@/lib/types";
 
 type UserRecord = AppUser;
@@ -173,6 +174,27 @@ export async function listCurrentDoctorAvailability(): Promise<DoctorAvailabilit
   }
 
   return (data ?? []) as DoctorAvailability[];
+}
+
+export async function getVisitPreparationForAppointment(
+  appointmentId: string
+): Promise<VisitPreparation | null> {
+  noStore();
+
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("visit_preparations")
+    .select(
+      "id, appointment_id, doctor_id, patient_id, symptoms, symptom_duration, current_medications, allergies, medical_history, visit_goals, ai_summary, created_at, updated_at"
+    )
+    .eq("appointment_id", appointmentId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data as VisitPreparation | null) ?? null;
 }
 
 async function getDoctorProfilesByIds(doctorIds: string[]) {

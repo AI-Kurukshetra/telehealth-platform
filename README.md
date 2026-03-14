@@ -27,10 +27,11 @@ Detailed current status and testing guide:
 7. Run the SQL in `supabase/migrations/202603140005_fix_recursive_rls_functions.sql`.
 8. Run the SQL in `supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql`.
 9. Run the SQL in `supabase/migrations/202603140007_fix_recursive_appointments_policy.sql`.
-10. Run the SQL in `supabase/seed.sql`.
-5. Start the app with `npm run dev`.
+10. Run the SQL in `supabase/migrations/202603140008_add_visit_preparations.sql`.
+11. Run the SQL in `supabase/seed.sql`.
+12. Start the app with `npm run dev`.
 
 ## Notes
 
-- Core auth, booking, messaging, records, payments, and symptom analysis flows now use live Supabase-backed data.
+- Core auth, booking, messaging, records, payments, symptom analysis, and AI visit prep flows now use live Supabase-backed data.
 - The service-role client is reserved for admin-only paths such as auth provisioning and Stripe webhook reconciliation.

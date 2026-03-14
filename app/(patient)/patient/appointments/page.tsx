@@ -1,7 +1,11 @@
 import { AppointmentManagementPanel } from "@/components/forms/appointment-management-panel";
 import { AppointmentTable } from "@/components/appointment-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { listDoctorAvailability, listPatientAppointments } from "@/lib/data";
+import {
+  getVisitPreparationForAppointment,
+  listDoctorAvailability,
+  listPatientAppointments
+} from "@/lib/data";
 
 export default async function PatientAppointmentsPage({
   searchParams
@@ -19,6 +23,9 @@ export default async function PatientAppointmentsPage({
   const selectedAvailability = selectedAppointment
     ? availability.filter((slot) => slot.doctor_id === selectedAppointment.doctor_id)
     : [];
+  const visitPreparation = selectedAppointment
+    ? await getVisitPreparationForAppointment(selectedAppointment.id)
+    : null;
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_24rem]">
@@ -45,6 +52,7 @@ export default async function PatientAppointmentsPage({
         <AppointmentManagementPanel
           appointment={selectedAppointment}
           availability={selectedAvailability}
+          visitPreparation={visitPreparation}
         />
       ) : (
         <Card className="bg-white/95">

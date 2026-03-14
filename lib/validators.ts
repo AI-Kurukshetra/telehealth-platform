@@ -62,3 +62,13 @@ export const medicalRecordSchema = z.object({
 export const symptomSchema = z.object({
   symptoms: z.string().min(10)
 });
+
+export const visitPrepSchema = z.object({
+  appointmentId: z.string().uuid(),
+  symptoms: z.string().trim().min(10).max(2000),
+  symptomDuration: z.string().trim().max(160).optional().or(z.literal("")),
+  currentMedications: z.string().trim().max(500).optional().or(z.literal("")),
+  allergies: z.string().trim().max(500).optional().or(z.literal("")),
+  medicalHistory: z.string().trim().max(1200).optional().or(z.literal("")),
+  visitGoals: z.string().trim().min(5).max(800)
+});

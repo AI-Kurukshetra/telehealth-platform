@@ -1,8 +1,10 @@
 import { DoctorAvailabilityForm } from "@/components/forms/doctor-availability-form";
 import { MedicalRecordForm } from "@/components/forms/medical-record-form";
 import { AppointmentTable } from "@/components/appointment-table";
+import { VisitPrepSummaryCard } from "@/components/visit-prep-summary-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  getVisitPreparationForAppointment,
   listCurrentDoctorAvailability,
   listDoctorAppointments,
   listDoctorMedicalRecords
@@ -25,9 +27,12 @@ export default async function DoctorAppointmentsPage({
   const existingRecord = current
     ? records.find((record) => record.appointment_id === current.id)
     : null;
+  const visitPreparation = current
+    ? await getVisitPreparationForAppointment(current.id)
+    : null;
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_24rem]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_28rem]">
       <div className="space-y-6">
         <Card className="bg-white/95">
           <CardHeader>
@@ -50,33 +55,36 @@ export default async function DoctorAppointmentsPage({
         </Card>
         <DoctorAvailabilityForm availability={availability} />
       </div>
-      <Card className="bg-white/95">
-        <CardHeader>
-          <CardTitle>{existingRecord ? "Update medical note" : "Add medical note"}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {current ? (
-            <MedicalRecordForm
-              appointmentId={current.id}
-              patientId={current.patient_id}
-              defaultValues={
-                existingRecord
-                  ? {
-                      diagnosis: existingRecord.diagnosis,
-                      prescription: existingRecord.prescription,
-                      clinicalNotes: existingRecord.clinical_notes
-                    }
-                  : undefined
-              }
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Once a patient books a consultation, the selected appointment will appear here for
-              note entry.
-            </p>
-          )}
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        <VisitPrepSummaryCard preparation={visitPreparation} />
+        <Card className="bg-white/95">
+          <CardHeader>
+            <CardTitle>{existingRecord ? "Update medical note" : "Add medical note"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {current ? (
+              <MedicalRecordForm
+                appointmentId={current.id}
+                patientId={current.patient_id}
+                defaultValues={
+                  existingRecord
+                    ? {
+                        diagnosis: existingRecord.diagnosis,
+                        prescription: existingRecord.prescription,
+                        clinicalNotes: existingRecord.clinical_notes
+                      }
+                    : undefined
+                }
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Once a patient books a consultation, the selected appointment will appear here for
+                note entry.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

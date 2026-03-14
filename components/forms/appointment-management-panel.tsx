@@ -7,6 +7,7 @@ import {
   rescheduleAppointmentAction,
   startCheckoutAction
 } from "@/app/actions/appointments";
+import { VisitPrepCopilotForm } from "@/components/forms/visit-prep-copilot-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +22,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { formatAppointmentDateTime, getWeekdayFromDate } from "@/lib/helpers";
-import type { AppointmentWithDoctor, DoctorAvailability } from "@/lib/types";
+import type {
+  AppointmentWithDoctor,
+  DoctorAvailability,
+  VisitPreparation
+} from "@/lib/types";
 
 const initialState = { error: "", success: false };
 
@@ -38,10 +43,12 @@ function getWeekdaySlots(availability: DoctorAvailability[], date: string) {
 
 export function AppointmentManagementPanel({
   appointment,
-  availability
+  availability,
+  visitPreparation
 }: {
   appointment: AppointmentWithDoctor;
   availability: DoctorAvailability[];
+  visitPreparation: VisitPreparation | null;
 }) {
   const [selectedDate, setSelectedDate] = useState(appointment.appointment_date);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(appointment.time_slot);
@@ -181,6 +188,11 @@ export function AppointmentManagementPanel({
           </form>
         </CardContent>
       </Card>
+
+      <VisitPrepCopilotForm
+        appointmentId={appointment.id}
+        existingPreparation={visitPreparation}
+      />
     </div>
   );
 }

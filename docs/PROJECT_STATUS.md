@@ -44,7 +44,8 @@ Run the SQL files in this order inside your Supabase SQL editor:
 5. [supabase/migrations/202603140005_fix_recursive_rls_functions.sql](/Users/apple/hackathon-project/supabase/migrations/202603140005_fix_recursive_rls_functions.sql)
 6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
 7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
-8. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+8. [supabase/migrations/202603140008_add_visit_preparations.sql](/Users/apple/hackathon-project/supabase/migrations/202603140008_add_visit_preparations.sql)
+9. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ### Supabase Auth settings
 
@@ -187,6 +188,15 @@ Implemented:
 - OpenAI-backed structured response flow when `LLM_API_KEY` is configured
 - Safe fallback response when no AI key is configured
 
+### AI visit prep copilot
+
+Implemented:
+
+- Patient-side pre-visit intake attached to an appointment
+- AI-generated visit summary, urgency, prep checklist, and follow-up questions
+- Doctor-side AI prep brief on the appointments workspace
+- Supabase-backed persistence for visit preparation data
+
 ### UI/UX
 
 Completed so far:
@@ -229,6 +239,7 @@ You can test these flows now:
 - Stripe Checkout payment redirect
 - Stripe payment sync via webhook and success-page reconciliation
 - LLM-backed symptom analysis
+- AI visit prep copilot save and review flow
 
 ### Works as UI/demo flow
 
