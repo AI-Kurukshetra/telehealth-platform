@@ -20,6 +20,24 @@ values
   ('bbbbbbb2-2222-4222-8222-222222222222', '55555555-5555-5555-5555-555555555555', 28, 'Female')
 on conflict (id) do nothing;
 
+insert into public.doctor_availability (doctor_id, weekday, time_slot)
+values
+  ('aaaaaaa1-1111-4111-8111-111111111111', 1, '09:00 AM'),
+  ('aaaaaaa1-1111-4111-8111-111111111111', 1, '09:30 AM'),
+  ('aaaaaaa1-1111-4111-8111-111111111111', 1, '10:00 AM'),
+  ('aaaaaaa1-1111-4111-8111-111111111111', 3, '02:00 PM'),
+  ('aaaaaaa1-1111-4111-8111-111111111111', 3, '02:30 PM'),
+  ('aaaaaaa1-1111-4111-8111-111111111111', 5, '09:30 AM'),
+  ('aaaaaaa2-2222-4222-8222-222222222222', 1, '11:00 AM'),
+  ('aaaaaaa2-2222-4222-8222-222222222222', 1, '11:30 AM'),
+  ('aaaaaaa2-2222-4222-8222-222222222222', 2, '02:00 PM'),
+  ('aaaaaaa2-2222-4222-8222-222222222222', 4, '03:00 PM'),
+  ('aaaaaaa3-3333-4333-8333-333333333333', 1, '09:00 AM'),
+  ('aaaaaaa3-3333-4333-8333-333333333333', 3, '11:00 AM'),
+  ('aaaaaaa3-3333-4333-8333-333333333333', 5, '02:00 PM'),
+  ('aaaaaaa3-3333-4333-8333-333333333333', 5, '02:30 PM')
+on conflict (doctor_id, weekday, time_slot) do nothing;
+
 insert into public.appointments (id, doctor_id, patient_id, appointment_date, time_slot, status, video_room_id, payment_status, consultation_fee)
 values
   ('ccccccc1-1111-4111-8111-111111111111', 'aaaaaaa1-1111-4111-8111-111111111111', 'bbbbbbb1-1111-4111-8111-111111111111', '2026-03-15', '09:30 AM', 'scheduled', 'carebridge-derm-001', 'paid', 85),

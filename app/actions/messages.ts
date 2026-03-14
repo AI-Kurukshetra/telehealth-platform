@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 
 import { requireAuth } from "@/lib/auth";
 import { getCurrentUserContext } from "@/lib/data";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { messageSchema } from "@/lib/validators";
 import type { Message } from "@/lib/types";
@@ -35,9 +34,9 @@ export async function sendMessageAction(
   }
 
   const { user, patientProfile, doctorProfile } = await getCurrentUserContext();
-  const adminSupabase = createAdminSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
-  const { data: receiver, error: receiverError } = await adminSupabase
+  const { data: receiver, error: receiverError } = await supabase
     .from("users")
     .select("id, role")
     .eq("id", parsed.data.receiverId)
@@ -60,12 +59,12 @@ export async function sendMessageAction(
 
   const relationQuery =
     user.role === "patient"
-      ? adminSupabase
+      ? supabase
           .from("doctors")
           .select("id")
           .eq("user_id", receiver.id)
           .single()
-      : adminSupabase
+      : supabase
           .from("patients")
           .select("id")
           .eq("user_id", receiver.id)
@@ -79,14 +78,14 @@ export async function sendMessageAction(
 
   const appointmentMatch =
     user.role === "patient"
-      ? await adminSupabase
+      ? await supabase
           .from("appointments")
           .select("id")
           .eq("patient_id", patientProfile!.id)
           .eq("doctor_id", counterpartProfile.id)
           .limit(1)
           .maybeSingle()
-      : await adminSupabase
+      : await supabase
           .from("appointments")
           .select("id")
           .eq("doctor_id", doctorProfile!.id)
@@ -105,7 +104,6 @@ export async function sendMessageAction(
     };
   }
 
-  const supabase = await createServerSupabaseClient();
   const { data: insertedMessage, error: insertError } = await supabase
     .from("messages")
     .insert({

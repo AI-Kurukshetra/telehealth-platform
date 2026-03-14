@@ -11,10 +11,12 @@ const initialState = { error: "", success: false, data: undefined };
 
 export function MessageComposer({
   receiverId,
-  onSent
+  onSent,
+  onFocus
 }: {
   receiverId: string;
   onSent?: (message: Message) => void;
+  onFocus?: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState(sendMessageAction, initialState);
@@ -34,7 +36,7 @@ export function MessageComposer({
   return (
     <form ref={formRef} action={action} className="space-y-3">
       <input type="hidden" name="receiverId" value={receiverId} />
-      <Textarea name="message" placeholder="Write a secure message..." />
+      <Textarea name="message" placeholder="Write a secure message..." onFocus={onFocus} />
       {state.error ? <p className="text-sm text-rose-600">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-700">Message sent securely.</p> : null}
       <Button disabled={pending}>{pending ? "Sending..." : "Send message"}</Button>

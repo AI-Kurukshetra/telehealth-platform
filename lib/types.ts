@@ -39,6 +39,15 @@ export interface DoctorProfile {
   updated_at: string;
 }
 
+export interface DoctorAvailability {
+  id: string;
+  doctor_id: string;
+  weekday: number;
+  time_slot: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PatientProfile {
   id: string;
   user_id: string;
@@ -58,8 +67,30 @@ export interface Appointment {
   video_room_id: string;
   payment_status: PaymentStatus;
   consultation_fee: number;
+  cancelled_at?: string | null;
+  cancelled_by_user_id?: string | null;
+  cancellation_reason?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface DoctorDirectoryItem extends DoctorProfile {
+  full_name: string;
+}
+
+export interface AppointmentWithDoctor extends Appointment {
+  doctor?: {
+    full_name?: string | null;
+    specialization?: string | null;
+  };
+}
+
+export interface AppointmentWithPatient extends Appointment {
+  patient?: {
+    full_name?: string | null;
+    age?: number | null;
+    gender?: string | null;
+  };
 }
 
 export interface Payment {
@@ -80,6 +111,7 @@ export interface Message {
   receiver_id: string;
   message: string;
   created_at: string;
+  read_at?: string | null;
 }
 
 export interface MessageContact {
@@ -89,6 +121,8 @@ export interface MessageContact {
   role: UserRole;
   specialization?: string | null;
   last_message_at?: string | null;
+  last_message_preview?: string | null;
+  unread_count?: number;
 }
 
 export interface MedicalRecord {

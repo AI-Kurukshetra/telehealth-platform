@@ -108,6 +108,8 @@ create or replace function public.current_app_user_id()
 returns uuid
 language sql
 stable
+security definer
+set search_path = public
 as $$
   select id
   from public.users
@@ -164,17 +166,27 @@ for all
 using (user_id = public.current_app_user_id())
 with check (user_id = public.current_app_user_id());
 
+drop policy if exists "related doctors can view patient profiles" on public.patients;
+create policy "related doctors can view patient profiles"
+on public.patients
+for select
+using (
+  user_id = public.current_app_user_id()
+  or exists (
+    select 1
+    from public.appointments
+    where appointments.patient_id = patients.id
+      and appointments.doctor_id = public.current_doctor_profile_id()
+  )
+);
+
 drop policy if exists "participants can view appointments" on public.appointments;
 create policy "participants can view appointments"
 on public.appointments
 for select
 using (
-  doctor_id in (
-    select id from public.doctors where user_id = public.current_app_user_id()
-  )
-  or patient_id in (
-    select id from public.patients where user_id = public.current_app_user_id()
-  )
+  doctor_id = public.current_doctor_profile_id()
+  or patient_id = public.current_patient_profile_id()
 );
 
 drop policy if exists "patients can create appointments" on public.appointments;
@@ -182,9 +194,7 @@ create policy "patients can create appointments"
 on public.appointments
 for insert
 with check (
-  patient_id in (
-    select id from public.patients where user_id = public.current_app_user_id()
-  )
+  patient_id = public.current_patient_profile_id()
 );
 
 drop policy if exists "participants can update appointments" on public.appointments;
@@ -192,20 +202,12 @@ create policy "participants can update appointments"
 on public.appointments
 for update
 using (
-  doctor_id in (
-    select id from public.doctors where user_id = public.current_app_user_id()
-  )
-  or patient_id in (
-    select id from public.patients where user_id = public.current_app_user_id()
-  )
+  doctor_id = public.current_doctor_profile_id()
+  or patient_id = public.current_patient_profile_id()
 )
 with check (
-  doctor_id in (
-    select id from public.doctors where user_id = public.current_app_user_id()
-  )
-  or patient_id in (
-    select id from public.patients where user_id = public.current_app_user_id()
-  )
+  doctor_id = public.current_doctor_profile_id()
+  or patient_id = public.current_patient_profile_id()
 );
 
 drop policy if exists "participants can view messages" on public.messages;

@@ -1,9 +1,21 @@
-import { format, isAfter, parseISO } from "date-fns";
+import { format, isAfter, isBefore, parseISO } from "date-fns";
 
 import { demoAppointments, demoDoctors, demoPatients, demoUsers } from "@/lib/demo-data";
 
 export function formatAppointmentDate(date: string) {
   return format(parseISO(date), "MMM d, yyyy");
+}
+
+export function formatAppointmentDateTime(date: string, timeSlot: string) {
+  return `${formatAppointmentDate(date)} at ${timeSlot}`;
+}
+
+export function getWeekdayFromDate(date: string) {
+  return parseISO(date).getDay();
+}
+
+export function isPastAppointmentDate(date: string) {
+  return isBefore(parseISO(date), new Date("2026-03-14T00:00:00Z"));
 }
 
 export function isUpcoming(date: string) {

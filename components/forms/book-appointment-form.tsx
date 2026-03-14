@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 
 import { bookAppointmentAction } from "@/app/actions/appointments";
 import { Button } from "@/components/ui/button";
@@ -14,49 +14,78 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { TIME_SLOTS } from "@/lib/constants";
-import type { DoctorProfile } from "@/lib/types";
+import { getWeekdayFromDate } from "@/lib/helpers";
+import type { DoctorAvailability, DoctorDirectoryItem } from "@/lib/types";
 
 const initialState = { error: "", success: false, videoRoomId: "", paymentStatus: "" };
 
-type DoctorOption = DoctorProfile & {
-  user?: {
-    id: string;
-    email: string;
-    full_name: string;
-  } | null;
-};
+function getSlotsForDate(
+  availability: DoctorAvailability[],
+  doctorId: string,
+  date: string
+) {
+  if (!doctorId || !date) {
+    return [];
+  }
+
+  const weekday = getWeekdayFromDate(date);
+
+  return availability
+    .filter((slot) => slot.doctor_id === doctorId && slot.weekday === weekday)
+    .map((slot) => slot.time_slot);
+}
 
 export function BookAppointmentForm({
-  doctors
+  doctors,
+  availability
 }: {
-  doctors: DoctorOption[];
+  doctors: DoctorDirectoryItem[];
+  availability: DoctorAvailability[];
 }) {
   const specializations = [...new Set(doctors.map((doctor) => doctor.specialization))];
-  const [specialization, setSpecialization] = useState<string>(
-    specializations[0] ?? ""
-  );
-  const [doctorId, setDoctorId] = useState<string>(doctors[0]?.id ?? "");
+  const initialSpecialization = specializations[0] ?? "";
+  const initialDoctorId =
+    doctors.find((doctor) => doctor.specialization === initialSpecialization)?.id ?? "";
+  const [specialization, setSpecialization] = useState<string>(initialSpecialization);
+  const [doctorId, setDoctorId] = useState<string>(initialDoctorId);
+  const [appointmentDate, setAppointmentDate] = useState<string>("");
+  const [timeSlot, setTimeSlot] = useState<string>("");
   const [state, action, pending] = useActionState(bookAppointmentAction, initialState);
 
-  const filteredDoctors = doctors.filter(
-    (doctor) => doctor.specialization === specialization
+  const filteredDoctors = doctors.filter((doctor) => doctor.specialization === specialization);
+  const availableSlots = useMemo(
+    () => getSlotsForDate(availability, doctorId, appointmentDate),
+    [appointmentDate, availability, doctorId]
   );
 
   function handleSpecializationChange(nextSpecialization: string) {
     const nextDoctors = doctors.filter(
       (doctor) => doctor.specialization === nextSpecialization
     );
+    const nextDoctorId = nextDoctors[0]?.id ?? "";
 
     setSpecialization(nextSpecialization);
-    setDoctorId(nextDoctors[0]?.id ?? "");
+    setDoctorId(nextDoctorId);
+    setTimeSlot(getSlotsForDate(availability, nextDoctorId, appointmentDate)[0] ?? "");
+  }
+
+  function handleDoctorChange(nextDoctorId: string) {
+    setDoctorId(nextDoctorId);
+    setTimeSlot(getSlotsForDate(availability, nextDoctorId, appointmentDate)[0] ?? "");
+  }
+
+  function handleDateChange(nextDate: string) {
+    setAppointmentDate(nextDate);
+    setTimeSlot(getSlotsForDate(availability, doctorId, nextDate)[0] ?? "");
   }
 
   return (
     <Card className="bg-white/95">
       <CardHeader>
         <CardTitle>Book a consultation</CardTitle>
-        <CardDescription>Choose a specialist, doctor, date, and fixed 30-minute slot.</CardDescription>
+        <CardDescription>
+          Choose a specialist, then book from the doctor&apos;s configured weekly availability.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form action={action} className="grid gap-4 lg:grid-cols-2">
@@ -81,14 +110,14 @@ export function BookAppointmentForm({
           </div>
           <div className="space-y-2">
             <Label>Doctor</Label>
-            <Select name="doctorId" value={doctorId} onValueChange={setDoctorId}>
+            <Select name="doctorId" value={doctorId} onValueChange={handleDoctorChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select doctor" />
               </SelectTrigger>
               <SelectContent>
                 {filteredDoctors.map((doctor) => (
                   <SelectItem key={doctor.id} value={doctor.id}>
-                    {doctor.user?.full_name} (${doctor.consultation_fee})
+                    {doctor.full_name} (${doctor.consultation_fee})
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -96,22 +125,35 @@ export function BookAppointmentForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="date">Date</Label>
-            <Input id="date" name="date" type="date" required />
+            <Input
+              id="date"
+              name="date"
+              type="date"
+              min={new Date().toISOString().slice(0, 10)}
+              value={appointmentDate}
+              onChange={(event) => handleDateChange(event.target.value)}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label>Time Slot</Label>
-            <Select name="timeSlot" defaultValue={TIME_SLOTS[0]}>
+            <Select name="timeSlot" value={timeSlot} onValueChange={setTimeSlot}>
               <SelectTrigger>
                 <SelectValue placeholder="Select time slot" />
               </SelectTrigger>
               <SelectContent>
-                {TIME_SLOTS.map((slot) => (
+                {availableSlots.map((slot) => (
                   <SelectItem key={slot} value={slot}>
                     {slot}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {appointmentDate && availableSlots.length === 0 ? (
+              <p className="text-sm text-amber-700">
+                This doctor is unavailable on the selected day. Choose another date or doctor.
+              </p>
+            ) : null}
           </div>
           <div className="lg:col-span-2">
             {filteredDoctors.length === 0 ? (
@@ -123,7 +165,15 @@ export function BookAppointmentForm({
             <p className="mb-3 text-sm text-muted-foreground">
               After confirmation you will be redirected to Stripe Checkout to complete payment securely.
             </p>
-            <Button disabled={pending || filteredDoctors.length === 0 || !doctorId}>
+            <Button
+              disabled={
+                pending ||
+                filteredDoctors.length === 0 ||
+                !doctorId ||
+                !appointmentDate ||
+                !timeSlot
+              }
+            >
               {pending ? "Preparing payment..." : "Continue to payment"}
             </Button>
           </div>

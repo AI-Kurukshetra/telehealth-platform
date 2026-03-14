@@ -37,10 +37,22 @@ export function MessageContactList({
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-semibold">{contact.full_name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-semibold">{contact.full_name}</p>
+                    {contact.unread_count ? (
+                      <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-semibold text-primary-foreground">
+                        {contact.unread_count}
+                      </span>
+                    ) : null}
+                  </div>
                   <p className="truncate text-sm text-muted-foreground">
                     {contact.specialization ?? contact.email}
                   </p>
+                  {contact.last_message_preview ? (
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                      {contact.last_message_preview}
+                    </p>
+                  ) : null}
                 </div>
                 {contact.last_message_at ? (
                   <span className="shrink-0 text-xs text-muted-foreground">

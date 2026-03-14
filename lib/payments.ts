@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { getServerEnv } from "@/lib/env";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getStripeClient } from "@/lib/stripe";
 
 type AppointmentPaymentContext = {
@@ -15,7 +16,7 @@ type AppointmentPaymentContext = {
 };
 
 async function getAppointmentPaymentContext(appointmentId: string) {
-  const supabase = createAdminSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data: appointment, error: appointmentError } = await supabase
     .from("appointments")
@@ -67,7 +68,7 @@ async function getAppointmentPaymentContext(appointmentId: string) {
 export async function createCheckoutSessionForAppointment(appointmentId: string) {
   const env = getServerEnv();
   const stripe = getStripeClient();
-  const supabase = createAdminSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   const { appointment, payment, doctorUser } = await getAppointmentPaymentContext(
     appointmentId
@@ -176,7 +177,7 @@ export async function syncPaymentFromCheckoutSession(sessionId: string) {
 }
 
 export async function getPatientPaymentHistory() {
-  const supabase = createAdminSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("payments")
     .select("id, appointment_id, amount, currency, status, stripe_checkout_session_id, stripe_payment_intent_id, created_at, updated_at")

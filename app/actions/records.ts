@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { requireRole } from "@/lib/auth";
 import { getCurrentUserContext } from "@/lib/data";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { medicalRecordSchema } from "@/lib/validators";
 
 type RecordState = {
@@ -49,7 +49,7 @@ export async function createMedicalRecordAction(
     };
   }
 
-  const supabase = createAdminSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data: appointment, error: appointmentError } = await supabase
     .from("appointments")
     .select("id, doctor_id, patient_id")

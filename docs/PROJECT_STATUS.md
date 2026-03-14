@@ -40,7 +40,11 @@ Run the SQL files in this order inside your Supabase SQL editor:
 1. [supabase/migrations/202603140001_initial_schema.sql](/Users/apple/hackathon-project/supabase/migrations/202603140001_initial_schema.sql)
 2. [supabase/migrations/202603140002_enable_messages_realtime.sql](/Users/apple/hackathon-project/supabase/migrations/202603140002_enable_messages_realtime.sql)
 3. [supabase/migrations/202603140003_add_stripe_checkout_session.sql](/Users/apple/hackathon-project/supabase/migrations/202603140003_add_stripe_checkout_session.sql)
-4. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+4. [supabase/migrations/202603140004_hardening_and_scheduling.sql](/Users/apple/hackathon-project/supabase/migrations/202603140004_hardening_and_scheduling.sql)
+5. [supabase/migrations/202603140005_fix_recursive_rls_functions.sql](/Users/apple/hackathon-project/supabase/migrations/202603140005_fix_recursive_rls_functions.sql)
+6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
+7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
+8. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ### Supabase Auth settings
 
@@ -151,7 +155,10 @@ Implemented database features:
 - indexes
 - enum types
 - row-level security enabled
-- baseline RLS policies added
+- stronger RLS policies for appointments, messages, records, users, and payments
+- doctor availability table added
+- unread message tracking added
+- scheduling validation and active-slot uniqueness added
 
 ### Seed/demo data
 
@@ -188,6 +195,9 @@ Completed so far:
 - Auth pages redesigned
 - Dashboard shell redesigned
 - Sidebar, cards, forms, tables, and messaging surfaces improved
+- Appointment management panel added for reschedule/cancel/payment retry
+- Doctor weekly availability manager added
+- Better conversation layout, unread indicators, and responsive table handling
 - Responsive layout in place for public and dashboard pages
 
 ## 3. What Is Testable Right Now
@@ -212,6 +222,10 @@ You can test these flows now:
 - medical record persistence
 - patient medical record reads
 - doctor medical record reads
+- doctor availability management
+- patient reschedule flow
+- patient cancellation flow
+- unread message indicators and read tracking
 - Stripe Checkout payment redirect
 - Stripe payment sync via webhook and success-page reconciliation
 - LLM-backed symptom analysis
@@ -226,25 +240,26 @@ You can test these flows now:
 
 This is important for testing expectations.
 
-### Demo-data driven screens
+### Remaining non-final areas
 
-Most dashboard content is still rendered from local demo data in:
+Most core patient and doctor flows now read and write real Supabase data. The remaining non-final areas are:
 
-- [lib/data.ts](/Users/apple/hackathon-project/lib/data.ts)
-- [lib/demo-data.ts](/Users/apple/hackathon-project/lib/demo-data.ts)
-
-That means:
-- some dashboard counters and AI fallback responses still use placeholder/demo logic
+- AI fallback responses when `LLM_API_KEY` is missing
+- webhook forwarding setup for local Stripe testing
+- no email/SMS notifications yet
+- no audit log or error monitoring integration yet
+- no dedicated doctor reschedule/cancel workflow yet
 
 ### Booking persistence
 
 Current booking action:
 
 - validates form input
+- validates doctor availability for the chosen weekday
 - generates `video_room_id`
 - inserts appointment into Supabase
 - inserts payment row into Supabase
-- prevents double-booking of the same doctor/date/time slot
+- prevents double-booking of active doctor slots at both app and database level
 - revalidates the appointment dashboards after booking
 
 ### Messaging persistence/realtime
@@ -255,6 +270,7 @@ Current messaging flow:
 - writes message rows to Supabase
 - loads real doctor-patient conversation threads
 - subscribes to Supabase Realtime for active conversation updates
+- marks conversations as read and shows unread badges
 - blocks messaging unless a doctor-patient appointment relationship exists
 
 ### Medical records persistence
@@ -351,9 +367,15 @@ Auth:
 Database:
 
 - [supabase/migrations/202603140001_initial_schema.sql](/Users/apple/hackathon-project/supabase/migrations/202603140001_initial_schema.sql)
+- [supabase/migrations/202603140002_enable_messages_realtime.sql](/Users/apple/hackathon-project/supabase/migrations/202603140002_enable_messages_realtime.sql)
+- [supabase/migrations/202603140003_add_stripe_checkout_session.sql](/Users/apple/hackathon-project/supabase/migrations/202603140003_add_stripe_checkout_session.sql)
+- [supabase/migrations/202603140004_hardening_and_scheduling.sql](/Users/apple/hackathon-project/supabase/migrations/202603140004_hardening_and_scheduling.sql)
+- [supabase/migrations/202603140005_fix_recursive_rls_functions.sql](/Users/apple/hackathon-project/supabase/migrations/202603140005_fix_recursive_rls_functions.sql)
+- [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
+- [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
 - [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
-Demo data and current UI data sources:
+Supporting files and fallbacks:
 
 - [lib/demo-data.ts](/Users/apple/hackathon-project/lib/demo-data.ts)
 - [lib/data.ts](/Users/apple/hackathon-project/lib/data.ts)
@@ -362,5 +384,5 @@ Demo data and current UI data sources:
 
 In the next implementation pass, the highest-value work is:
 
-1. Add stronger admin/demo polish and analytics
-2. Expand patient/doctor workflow refinements and edge-case handling
+1. Add email/SMS notifications and reminder workflows
+2. Add monitoring, audit logging, and deployment hardening

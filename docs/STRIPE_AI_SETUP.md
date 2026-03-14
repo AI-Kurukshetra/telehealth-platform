@@ -41,7 +41,11 @@ Run these SQL files in Supabase SQL Editor in this order:
 1. [supabase/migrations/202603140001_initial_schema.sql](/Users/apple/hackathon-project/supabase/migrations/202603140001_initial_schema.sql)
 2. [supabase/migrations/202603140002_enable_messages_realtime.sql](/Users/apple/hackathon-project/supabase/migrations/202603140002_enable_messages_realtime.sql)
 3. [supabase/migrations/202603140003_add_stripe_checkout_session.sql](/Users/apple/hackathon-project/supabase/migrations/202603140003_add_stripe_checkout_session.sql)
-4. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+4. [supabase/migrations/202603140004_hardening_and_scheduling.sql](/Users/apple/hackathon-project/supabase/migrations/202603140004_hardening_and_scheduling.sql)
+5. [supabase/migrations/202603140005_fix_recursive_rls_functions.sql](/Users/apple/hackathon-project/supabase/migrations/202603140005_fix_recursive_rls_functions.sql)
+6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
+7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
+8. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ## 3. Start The App
 

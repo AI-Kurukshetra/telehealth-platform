@@ -41,8 +41,10 @@ export default async function DoctorsPage() {
                   Verified
                 </div>
               </div>
-              <CardTitle className="text-2xl">{doctor.user?.full_name}</CardTitle>
-              <CardDescription className="leading-6">{doctor.bio}</CardDescription>
+              <CardTitle className="text-2xl">{doctor.full_name}</CardTitle>
+              <CardDescription className="leading-6">
+                {doctor.bio ?? "Trusted telehealth provider available for secure virtual visits."}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">

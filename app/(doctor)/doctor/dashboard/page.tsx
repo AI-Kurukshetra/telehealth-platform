@@ -23,7 +23,7 @@ export default async function DoctorDashboardPage() {
       <section className="grid gap-4 md:grid-cols-3">
         <MetricCard title="Today queue" value={String(scheduledCount)} description="Consultations and follow-ups assigned for this doctor." />
         <MetricCard title="Pending notes" value={String(pendingNotesCount)} description="Appointments still waiting for a saved clinical record." />
-        <MetricCard title="Patient messages" value={String(messageCount)} description="Secure messages exchanged with assigned patients." />
+        <MetricCard title="Unread messages" value={String(messageCount)} description="New patient messages waiting in your inbox." />
       </section>
 
       <Card className="bg-white/95">
@@ -32,7 +32,7 @@ export default async function DoctorDashboardPage() {
         </CardHeader>
         <CardContent>
           {appointments.length > 0 ? (
-            <AppointmentTable appointments={appointments} role="doctor" />
+            <AppointmentTable appointments={appointments} role="doctor" managementBasePath="/doctor/appointments" />
           ) : (
             <p className="text-sm text-muted-foreground">
               No consultations are scheduled for this doctor yet.

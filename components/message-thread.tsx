@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -19,7 +19,8 @@ export function MessageThread({
   title,
   currentUser,
   otherUser,
-  optimisticMessage
+  optimisticMessage,
+  onIncomingRead
 }: {
   initialMessages: Message[];
   title: string;
@@ -32,19 +33,26 @@ export function MessageThread({
     full_name: string;
   };
   optimisticMessage?: Message | null;
+  onIncomingRead?: () => void;
 }) {
   const [messages, setMessages] = useState(() => sortMessages(initialMessages));
+  const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = currentUser.id;
   const otherUserId = otherUser.id;
-  const displayedMessages =
-    optimisticMessage &&
-    ((optimisticMessage.sender_id === currentUserId &&
-      optimisticMessage.receiver_id === otherUserId) ||
-      (optimisticMessage.sender_id === otherUserId &&
-        optimisticMessage.receiver_id === currentUserId)) &&
-    !messages.some((message) => message.id === optimisticMessage.id)
-      ? sortMessages([...messages, optimisticMessage])
-      : messages;
+  const displayedMessages = useMemo(() => {
+    if (
+      optimisticMessage &&
+      ((optimisticMessage.sender_id === currentUserId &&
+        optimisticMessage.receiver_id === otherUserId) ||
+        (optimisticMessage.sender_id === otherUserId &&
+          optimisticMessage.receiver_id === currentUserId)) &&
+      !messages.some((message) => message.id === optimisticMessage.id)
+    ) {
+      return sortMessages([...messages, optimisticMessage]);
+    }
+
+    return messages;
+  }, [currentUserId, messages, optimisticMessage, otherUserId]);
 
   useEffect(() => {
     const supabase = createClientSupabaseClient();
@@ -76,6 +84,10 @@ export function MessageThread({
 
             return sortMessages([...existing, newMessage]);
           });
+
+          if (newMessage.receiver_id === currentUserId) {
+            onIncomingRead?.();
+          }
         }
       )
       .subscribe();
@@ -83,40 +95,66 @@ export function MessageThread({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [currentUserId, otherUserId]);
+  }, [currentUserId, onIncomingRead, otherUserId]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth"
+    });
+  }, [displayedMessages]);
 
   return (
-    <Card className="surface-panel bg-white/72">
-      <CardHeader>
+    <Card className="surface-panel h-full bg-white/72">
+      <CardHeader className="border-b border-border/60">
         <CardTitle className="text-2xl">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {displayedMessages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No messages yet. Start the conversation with a secure note.
-          </p>
-        ) : null}
-        {displayedMessages.map((message) => {
-          const sender =
-            message.sender_id === currentUserId ? currentUser : otherUser;
+      <CardContent className="p-0">
+        <div ref={scrollRef} className="flex max-h-[32rem] flex-col gap-4 overflow-y-auto p-6">
+          {displayedMessages.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No messages yet. Start the conversation with a secure note.
+            </p>
+          ) : null}
+          {displayedMessages.map((message) => {
+            const isCurrentUser = message.sender_id === currentUserId;
+            const sender = isCurrentUser ? currentUser : otherUser;
 
-          return (
-            <div key={message.id} className="flex gap-3 rounded-[1.5rem] border border-white/60 bg-white/62 p-4">
-              <Avatar>
-                <AvatarFallback>{sender?.full_name.slice(0, 2) ?? "CB"}</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="font-medium">{sender?.full_name}</p>
-                  <span className="text-xs text-muted-foreground">
-                    {format(new Date(message.created_at), "MMM d, h:mm a")}
-                  </span>
+            return (
+              <div
+                key={message.id}
+                className={isCurrentUser ? "flex justify-end" : "flex justify-start"}
+              >
+                <div
+                  className={
+                    isCurrentUser
+                      ? "flex max-w-[85%] flex-row-reverse gap-3"
+                      : "flex max-w-[85%] gap-3"
+                  }
+                >
+                  <Avatar className="mt-1">
+                    <AvatarFallback>{sender.full_name.slice(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <div
+                    className={
+                      isCurrentUser
+                        ? "rounded-[1.5rem] rounded-tr-md bg-primary px-4 py-3 text-primary-foreground"
+                        : "rounded-[1.5rem] rounded-tl-md border border-white/70 bg-white/80 px-4 py-3"
+                    }
+                  >
+                    <div className="flex items-center gap-2 text-xs opacity-80">
+                      <span className="font-semibold">{sender.full_name}</span>
+                      <span>{format(new Date(message.created_at), "MMM d, h:mm a")}</span>
+                    </div>
+                    <p className={isCurrentUser ? "mt-2 text-sm" : "mt-2 text-sm text-muted-foreground"}>
+                      {message.message}
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{message.message}</p>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );

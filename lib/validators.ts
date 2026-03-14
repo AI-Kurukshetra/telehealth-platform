@@ -31,6 +31,21 @@ export const bookingSchema = z.object({
   timeSlot: z.string().min(1)
 });
 
+export const availabilitySchema = z.object({
+  slots: z.array(z.string()).default([])
+});
+
+export const cancelAppointmentSchema = z.object({
+  appointmentId: z.string().uuid(),
+  reason: z.string().trim().min(3).max(240).optional().or(z.literal(""))
+});
+
+export const rescheduleAppointmentSchema = z.object({
+  appointmentId: z.string().uuid(),
+  date: z.string().min(1),
+  timeSlot: z.string().min(1)
+});
+
 export const messageSchema = z.object({
   receiverId: z.string().uuid(),
   message: z.string().min(1).max(1000)

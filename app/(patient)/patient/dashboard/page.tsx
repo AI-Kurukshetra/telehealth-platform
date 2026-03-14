@@ -20,7 +20,7 @@ export default async function PatientDashboardPage() {
       <section className="grid gap-4 md:grid-cols-3">
         <MetricCard title="Upcoming appointments" value={String(upcomingCount)} description="Scheduled consultations in the next 7 days." />
         <MetricCard title="Medical records" value={String(records.length)} description="Visit summaries and prescriptions available online." />
-        <MetricCard title="Care messages" value={String(messageCount)} description="Secure messages exchanged with your care team." />
+        <MetricCard title="Unread messages" value={String(messageCount)} description="New secure messages waiting for your review." />
       </section>
 
       <Card className="bg-white/95">
@@ -29,7 +29,7 @@ export default async function PatientDashboardPage() {
         </CardHeader>
         <CardContent>
           {appointments.length > 0 ? (
-            <AppointmentTable appointments={appointments} role="patient" />
+            <AppointmentTable appointments={appointments} role="patient" managementBasePath="/patient/appointments" />
           ) : (
             <p className="text-sm text-muted-foreground">
               No appointments yet. Book your first consultation to see it here.
