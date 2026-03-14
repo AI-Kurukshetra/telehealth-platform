@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 40 38% 97%;
+  --foreground: 197 44% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 197 44% 14%;
+  --primary: 186 76% 30%;
+  --primary-foreground: 44 80% 98%;
+  --secondary: 37 66% 90%;
+  --secondary-foreground: 22 62% 26%;
+  --muted: 45 31% 93%;
+  --muted-foreground: 197 18% 38%;
+  --accent: 169 35% 89%;
+  --accent-foreground: 176 58% 21%;
+  --destructive: 0 72% 52%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 38 28% 83%;
+  --input: 38 28% 83%;
+  --ring: 186 76% 30%;
+  --radius: 1.75rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(20, 136, 145, 0.18), transparent 28%),
+    radial-gradient(circle at 85% 15%, rgba(237, 165, 67, 0.16), transparent 24%),
+    linear-gradient(180deg, #fbf7ef 0%, #f4efe3 100%);
+  color: hsl(var(--foreground));
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.32), transparent 80%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.04em;
+}
+
+::selection {
+  background: rgba(20, 136, 145, 0.2);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.surface-panel {
+  background: rgba(255, 252, 248, 0.82);
+  border: 1px solid rgba(184, 168, 138, 0.22);
+  box-shadow: 0 24px 80px rgba(30, 41, 59, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(20px);
+  opacity: 0.8;
+}
