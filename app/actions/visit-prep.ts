@@ -38,6 +38,8 @@ export async function saveVisitPreparationAction(
     };
   }
 
+  const defaultVisitGoals = "Clinical review and treatment guidance for the reported symptoms.";
+
   const { patientProfile } = await getCurrentUserContext();
 
   if (!patientProfile) {
@@ -82,7 +84,7 @@ export async function saveVisitPreparationAction(
       currentMedications: parsed.data.currentMedications || undefined,
       allergies: parsed.data.allergies || undefined,
       medicalHistory: parsed.data.medicalHistory || undefined,
-      visitGoals: parsed.data.visitGoals
+      visitGoals: parsed.data.visitGoals || defaultVisitGoals
     });
 
     const payload = {
@@ -94,7 +96,7 @@ export async function saveVisitPreparationAction(
       current_medications: parsed.data.currentMedications || null,
       allergies: parsed.data.allergies || null,
       medical_history: parsed.data.medicalHistory || null,
-      visit_goals: parsed.data.visitGoals,
+      visit_goals: parsed.data.visitGoals || defaultVisitGoals,
       ai_summary: analysis
     };
 

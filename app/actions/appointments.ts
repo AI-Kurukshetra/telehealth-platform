@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { ZodError } from "zod";
 
 import { requireRole } from "@/lib/auth";
+import { analyzeVisitPreparationWithLlm } from "@/lib/ai";
 import { getCurrentUserContext } from "@/lib/data";
 import { getWeekdayFromDate, createVideoRoomId } from "@/lib/helpers";
 import { createCheckoutSessionForAppointment } from "@/lib/payments";
@@ -11,6 +13,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import {
   availabilitySchema,
   bookingSchema,
+  bookingVisitPrepSchema,
   cancelAppointmentSchema,
   rescheduleAppointmentSchema
 } from "@/lib/validators";
@@ -47,6 +50,29 @@ function mapAppointmentError(message: string) {
   }
 
   return message;
+}
+
+function mapVisitPrepValidationError(error: ZodError) {
+  const issue = error.issues[0];
+
+  if (!issue) {
+    return "Complete the pre-visit details or continue without the AI intake section.";
+  }
+
+  switch (issue.path[0]) {
+    case "symptoms":
+      return "Describe the symptoms in a little more detail before saving AI visit prep.";
+    case "symptomDuration":
+      return "Keep the symptom duration summary a little shorter.";
+    case "currentMedications":
+      return "Shorten the medication list slightly so it can be saved.";
+    case "allergies":
+      return "Shorten the allergy summary slightly so it can be saved.";
+    case "medicalHistory":
+      return "Shorten the medical history summary slightly so it can be saved.";
+    default:
+      return "Complete the pre-visit details or continue without the AI intake section.";
+  }
 }
 
 async function ensureDoctorAvailability(doctorId: string, date: string, timeSlot: string) {
@@ -90,10 +116,32 @@ export async function bookAppointmentAction(
     date: formData.get("date"),
     timeSlot: formData.get("timeSlot")
   });
+  const includeVisitPrep = formData.get("includeVisitPrep") === "true";
+  const visitPrepParsed = includeVisitPrep
+    ? bookingVisitPrepSchema.safeParse({
+        includeVisitPrep: formData.get("includeVisitPrep"),
+        symptoms: String(formData.get("symptoms") ?? ""),
+        symptomDuration: String(formData.get("symptomDuration") ?? ""),
+        currentMedications: String(formData.get("currentMedications") ?? ""),
+        allergies: String(formData.get("allergies") ?? ""),
+        medicalHistory: String(formData.get("medicalHistory") ?? ""),
+        visitGoals: String(formData.get("visitGoals") ?? "")
+      })
+    : null;
+  const defaultVisitGoals = "Clinical review and treatment guidance for the reported symptoms.";
 
   if (!parsed.success) {
     return {
       error: "Select a specialist, doctor, date, and time slot.",
+      success: false,
+      videoRoomId: "",
+      paymentStatus: ""
+    };
+  }
+
+  if (visitPrepParsed && !visitPrepParsed.success) {
+    return {
+      error: mapVisitPrepValidationError(visitPrepParsed.error),
       success: false,
       videoRoomId: "",
       paymentStatus: ""
@@ -191,6 +239,39 @@ export async function bookAppointmentAction(
       videoRoomId: "",
       paymentStatus: ""
     };
+  }
+
+  if (visitPrepParsed?.success) {
+    try {
+      const analysis = await analyzeVisitPreparationWithLlm({
+        symptoms: visitPrepParsed.data.symptoms,
+        symptomDuration: visitPrepParsed.data.symptomDuration || undefined,
+        currentMedications: visitPrepParsed.data.currentMedications || undefined,
+        allergies: visitPrepParsed.data.allergies || undefined,
+        medicalHistory: visitPrepParsed.data.medicalHistory || undefined,
+        visitGoals: visitPrepParsed.data.visitGoals || defaultVisitGoals
+      });
+
+      await supabase.from("visit_preparations").upsert(
+        {
+          appointment_id: appointment.id,
+          patient_id: patientProfile.id,
+          doctor_id: parsed.data.doctorId,
+          symptoms: visitPrepParsed.data.symptoms,
+          symptom_duration: visitPrepParsed.data.symptomDuration || null,
+          current_medications: visitPrepParsed.data.currentMedications || null,
+          allergies: visitPrepParsed.data.allergies || null,
+          medical_history: visitPrepParsed.data.medicalHistory || null,
+          visit_goals: visitPrepParsed.data.visitGoals || defaultVisitGoals,
+          ai_summary: analysis
+        },
+        {
+          onConflict: "appointment_id"
+        }
+      );
+    } catch {
+      // Visit prep is additive. Booking and payment should still proceed if AI intake fails.
+    }
   }
 
   revalidateAppointmentSurfaces();

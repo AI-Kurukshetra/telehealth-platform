@@ -41,6 +41,7 @@ export const PATIENT_NAV_ITEMS = [
 export const DOCTOR_NAV_ITEMS = [
   { href: "/doctor/dashboard", label: "Dashboard" },
   { href: "/doctor/appointments", label: "Appointments" },
+  { href: "/doctor/availability", label: "Availability" },
   { href: "/doctor/messages", label: "Messages" },
   { href: "/doctor/patient-records", label: "Patient Records" }
 ] as const;

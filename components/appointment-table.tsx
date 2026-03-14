@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, Clock3, MoreHorizontal } from "lucide-react";
+import { CalendarDays, ChevronRight, Clock3 } from "lucide-react";
 
 import { startCheckoutAction } from "@/app/actions/appointments";
 import { Badge } from "@/components/ui/badge";
@@ -133,7 +133,8 @@ export function AppointmentTable({
                     {managementBasePath ? (
                       <Button size="sm" variant="ghost" asChild>
                         <Link href={`${managementBasePath}?appointment=${appointment.id}`}>
-                          <MoreHorizontal className="h-4 w-4" />
+                          Details
+                          <ChevronRight className="ml-1 h-4 w-4" />
                         </Link>
                       </Button>
                     ) : null}

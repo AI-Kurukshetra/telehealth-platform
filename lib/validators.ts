@@ -31,6 +31,16 @@ export const bookingSchema = z.object({
   timeSlot: z.string().min(1)
 });
 
+export const bookingVisitPrepSchema = z.object({
+  includeVisitPrep: z.literal("true"),
+  symptoms: z.string().trim().min(10).max(2000),
+  symptomDuration: z.string().trim().max(160).optional().or(z.literal("")),
+  currentMedications: z.string().trim().max(500).optional().or(z.literal("")),
+  allergies: z.string().trim().max(500).optional().or(z.literal("")),
+  medicalHistory: z.string().trim().max(1200).optional().or(z.literal("")),
+  visitGoals: z.string().trim().max(800).optional().or(z.literal(""))
+});
+
 export const availabilitySchema = z.object({
   slots: z.array(z.string()).default([])
 });
@@ -70,5 +80,5 @@ export const visitPrepSchema = z.object({
   currentMedications: z.string().trim().max(500).optional().or(z.literal("")),
   allergies: z.string().trim().max(500).optional().or(z.literal("")),
   medicalHistory: z.string().trim().max(1200).optional().or(z.literal("")),
-  visitGoals: z.string().trim().min(5).max(800)
+  visitGoals: z.string().trim().max(800).optional().or(z.literal(""))
 });

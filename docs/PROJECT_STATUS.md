@@ -207,6 +207,7 @@ Completed so far:
 - Sidebar, cards, forms, tables, and messaging surfaces improved
 - Appointment management panel added for reschedule/cancel/payment retry
 - Doctor weekly availability manager added
+- Dedicated doctor availability page added
 - Better conversation layout, unread indicators, and responsive table handling
 - Responsive layout in place for public and dashboard pages
 

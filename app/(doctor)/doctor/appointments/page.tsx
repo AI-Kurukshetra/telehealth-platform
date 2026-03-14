@@ -1,11 +1,8 @@
-import { DoctorAvailabilityForm } from "@/components/forms/doctor-availability-form";
-import { MedicalRecordForm } from "@/components/forms/medical-record-form";
+import { DoctorAppointmentWorkspace } from "@/components/forms/doctor-appointment-workspace";
 import { AppointmentTable } from "@/components/appointment-table";
-import { VisitPrepSummaryCard } from "@/components/visit-prep-summary-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getVisitPreparationForAppointment,
-  listCurrentDoctorAvailability,
   listDoctorAppointments,
   listDoctorMedicalRecords
 } from "@/lib/data";
@@ -15,10 +12,9 @@ export default async function DoctorAppointmentsPage({
 }: {
   searchParams: Promise<{ appointment?: string }>;
 }) {
-  const [appointments, records, availability, params] = await Promise.all([
+  const [appointments, records, params] = await Promise.all([
     listDoctorAppointments(),
     listDoctorMedicalRecords(),
-    listCurrentDoctorAvailability(),
     searchParams
   ]);
   const selectedAppointmentId = params.appointment ?? appointments[0]?.id;
@@ -32,7 +28,7 @@ export default async function DoctorAppointmentsPage({
     : null;
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_28rem]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_30rem]">
       <div className="space-y-6">
         <Card className="bg-white/95">
           <CardHeader>
@@ -53,38 +49,12 @@ export default async function DoctorAppointmentsPage({
             )}
           </CardContent>
         </Card>
-        <DoctorAvailabilityForm availability={availability} />
       </div>
-      <div className="space-y-6">
-        <VisitPrepSummaryCard preparation={visitPreparation} />
-        <Card className="bg-white/95">
-          <CardHeader>
-            <CardTitle>{existingRecord ? "Update medical note" : "Add medical note"}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {current ? (
-              <MedicalRecordForm
-                appointmentId={current.id}
-                patientId={current.patient_id}
-                defaultValues={
-                  existingRecord
-                    ? {
-                        diagnosis: existingRecord.diagnosis,
-                        prescription: existingRecord.prescription,
-                        clinicalNotes: existingRecord.clinical_notes
-                      }
-                    : undefined
-                }
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Once a patient books a consultation, the selected appointment will appear here for
-                note entry.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      <DoctorAppointmentWorkspace
+        appointment={current ?? null}
+        existingRecord={existingRecord ?? null}
+        visitPreparation={visitPreparation}
+      />
     </div>
   );
 }

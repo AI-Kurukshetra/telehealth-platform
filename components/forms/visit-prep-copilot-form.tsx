@@ -92,16 +92,6 @@ export function VisitPrepCopilotForm({
               placeholder="Past diagnoses, surgeries, recurring issues, or family history that may help."
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="visit-prep-goals">What do you want help with during this visit?</Label>
-            <Textarea
-              id="visit-prep-goals"
-              name="visitGoals"
-              defaultValue={existingPreparation?.visit_goals}
-              placeholder="Describe your goals, questions, or the outcome you want from the appointment."
-              required
-            />
-          </div>
           {state.error ? <p className="text-sm text-rose-600">{state.error}</p> : null}
           {state.success ? (
             <p className="text-sm text-emerald-700">

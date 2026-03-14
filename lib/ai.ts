@@ -82,10 +82,12 @@ type VisitPreparationInput = {
   currentMedications?: string;
   allergies?: string;
   medicalHistory?: string;
-  visitGoals: string;
+  visitGoals?: string;
 };
 
 function buildVisitPrepFallback(input: VisitPreparationInput): VisitPrepAnalysis {
+  const visitGoal =
+    input.visitGoals?.trim() || "Clinical review and treatment guidance for the reported symptoms.";
   const combined = [
     input.symptoms,
     input.symptomDuration,
@@ -111,7 +113,7 @@ function buildVisitPrepFallback(input: VisitPreparationInput): VisitPrepAnalysis
       : ["Monitor for worsening symptoms, new severe pain, breathing changes, or fainting."];
 
   return {
-    visitSummary: `Patient reports ${input.symptoms.trim()}${input.symptomDuration ? ` for ${input.symptomDuration.trim()}` : ""}. Visit goal: ${input.visitGoals.trim()}.`,
+    visitSummary: `Patient reports ${input.symptoms.trim()}${input.symptomDuration ? ` for ${input.symptomDuration.trim()}` : ""}. Visit focus: ${visitGoal}`,
     urgencyLevel,
     clinicianBrief: `Pre-visit intake highlights the main concern as ${input.symptoms.trim()}. Review the reported history, medications, and allergies before the consultation, then confirm onset, severity, and impact on daily activities.`,
     recommendedQuestions: [
@@ -185,6 +187,8 @@ export async function analyzeVisitPreparationWithLlm(
   input: VisitPreparationInput
 ): Promise<VisitPrepAnalysis> {
   const env = getServerEnv();
+  const visitGoal =
+    input.visitGoals?.trim() || "Clinical review and treatment guidance for the reported symptoms.";
 
   if (!env.LLM_API_KEY) {
     return buildVisitPrepFallback(input);
@@ -212,7 +216,7 @@ export async function analyzeVisitPreparationWithLlm(
         content: [
           {
             type: "input_text",
-            text: `Create a visit preparation summary using this intake:\nSymptoms: ${input.symptoms}\nDuration: ${input.symptomDuration || "Not provided"}\nCurrent medications: ${input.currentMedications || "Not provided"}\nAllergies: ${input.allergies || "Not provided"}\nMedical history: ${input.medicalHistory || "Not provided"}\nVisit goals: ${input.visitGoals}`
+            text: `Create a visit preparation summary using this intake:\nSymptoms: ${input.symptoms}\nDuration: ${input.symptomDuration || "Not provided"}\nCurrent medications: ${input.currentMedications || "Not provided"}\nAllergies: ${input.allergies || "Not provided"}\nMedical history: ${input.medicalHistory || "Not provided"}\nVisit focus: ${visitGoal}`
           }
         ]
       }

@@ -14,7 +14,7 @@ export function DashboardShell({
 }) {
   return (
     <div className="min-h-screen">
-      <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 xl:px-8">
+      <div className="mx-auto w-full max-w-[1480px] px-4 py-6 sm:px-6 xl:px-8">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <Logo />
           <div className="surface-panel flex w-full items-center gap-3 rounded-full px-4 py-3 sm:w-auto">

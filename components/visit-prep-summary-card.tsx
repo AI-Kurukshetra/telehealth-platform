@@ -51,18 +51,12 @@ export function VisitPrepSummaryCard({
           <p className="text-sm font-medium text-muted-foreground">Reported symptoms</p>
           <p className="text-sm leading-6 text-foreground">{preparation.symptoms}</p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {preparation.symptom_duration ? (
-            <div className="rounded-[1.25rem] bg-muted/40 p-3">
-              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Duration</p>
-              <p className="mt-2 text-sm font-medium text-foreground">{preparation.symptom_duration}</p>
-            </div>
-          ) : null}
+        {preparation.symptom_duration ? (
           <div className="rounded-[1.25rem] bg-muted/40 p-3">
-            <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Visit goals</p>
-            <p className="mt-2 text-sm font-medium text-foreground">{preparation.visit_goals}</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Duration</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{preparation.symptom_duration}</p>
           </div>
-        </div>
+        ) : null}
         {preparation.current_medications ? (
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">Current medications</p>

@@ -9,23 +9,37 @@ export default async function PatientBookPage() {
   ]);
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_22rem]">
+    <div className="space-y-6">
       <BookAppointmentForm doctors={doctors} availability={availability} />
-      <Card className="bg-white/95">
-        <CardHeader>
-          <CardTitle>What to expect</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <p>
-            Confirm your doctor, time, and payment to reserve the consultation. Your visit details
-            will appear immediately in your appointments dashboard.
-          </p>
-          <p>
-            If you need to make a change later, you can manage, reschedule, or cancel the booking
-            from your appointments page.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="bg-white/95">
+          <CardHeader>
+            <CardTitle>What happens next</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm leading-6 text-muted-foreground">
+            Reserve the appointment, complete secure checkout, and your consultation will appear in
+            the appointments workspace right away.
+          </CardContent>
+        </Card>
+        <Card className="bg-white/95">
+          <CardHeader>
+            <CardTitle>Need to make a change?</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm leading-6 text-muted-foreground">
+            You can review visit details, reschedule, cancel, and update your visit prep from the
+            appointments page after booking.
+          </CardContent>
+        </Card>
+        <Card className="bg-white/95">
+          <CardHeader>
+            <CardTitle>Before your consultation</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm leading-6 text-muted-foreground">
+            Add symptoms, medications, allergies, and history to give your doctor more context
+            before the consultation begins.
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
