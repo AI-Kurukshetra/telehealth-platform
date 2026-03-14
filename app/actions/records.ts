@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireRole } from "@/lib/auth";
+import { analyzeCarePlanWithLlm } from "@/lib/ai";
 import { getCurrentUserContext } from "@/lib/data";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { medicalRecordSchema } from "@/lib/validators";
@@ -50,6 +51,12 @@ export async function createMedicalRecordAction(
   }
 
   const supabase = await createServerSupabaseClient();
+  const carePlan = await analyzeCarePlanWithLlm({
+    diagnosis: parsed.data.diagnosis,
+    prescription: parsed.data.prescription,
+    clinicalNotes: parsed.data.clinicalNotes
+  });
+
   const { data: appointment, error: appointmentError } = await supabase
     .from("appointments")
     .select("id, doctor_id, patient_id")
@@ -86,7 +93,8 @@ export async function createMedicalRecordAction(
         patient_id: parsed.data.patientId,
         diagnosis: parsed.data.diagnosis,
         prescription: parsed.data.prescription,
-        clinical_notes: parsed.data.clinicalNotes
+        clinical_notes: parsed.data.clinicalNotes,
+        ai_care_plan: carePlan
       },
       {
         onConflict: "appointment_id"

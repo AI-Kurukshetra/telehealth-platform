@@ -42,7 +42,11 @@ export function MedicalRecordForm({
         <Textarea id="clinicalNotes" name="clinicalNotes" defaultValue={defaultValues?.clinicalNotes} required />
       </div>
       {state.error ? <p className="text-sm text-rose-600">{state.error}</p> : null}
-      {state.success ? <p className="text-sm text-emerald-700">Medical record saved successfully.</p> : null}
+      {state.success ? (
+        <p className="text-sm text-emerald-700">
+          Medical record saved successfully and the AI care plan is ready.
+        </p>
+      ) : null}
       <Button disabled={pending}>{pending ? "Saving..." : "Save record"}</Button>
     </form>
   );

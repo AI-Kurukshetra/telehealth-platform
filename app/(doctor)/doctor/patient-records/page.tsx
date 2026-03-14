@@ -1,3 +1,4 @@
+import { AiCarePlanCard } from "@/components/ai-care-plan-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { listDoctorMedicalRecords } from "@/lib/data";
 
@@ -29,10 +30,11 @@ export default async function DoctorPatientRecordsPage() {
           <CardHeader>
             <CardTitle>{record.diagnosis}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="space-y-5 text-sm text-muted-foreground">
             <p><span className="font-medium text-foreground">Patient:</span> {record.patient?.full_name ?? "Assigned patient"}</p>
             <p><span className="font-medium text-foreground">Prescription:</span> {record.prescription}</p>
             <p><span className="font-medium text-foreground">Clinical notes:</span> {record.clinical_notes}</p>
+            <AiCarePlanCard carePlan={record.ai_care_plan} audience="doctor" />
           </CardContent>
         </Card>
       ))}

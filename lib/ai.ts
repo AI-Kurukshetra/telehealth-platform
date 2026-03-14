@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 import { getServerEnv } from "@/lib/env";
 import { demoSymptomResponse } from "@/lib/demo-data";
-import type { SymptomAnalysis, VisitPrepAnalysis } from "@/lib/types";
+import type { CarePlanSummary, SymptomAnalysis, VisitPrepAnalysis } from "@/lib/types";
 
 const symptomSchema = {
   type: "object",
@@ -76,6 +76,38 @@ const visitPrepSchema = {
   ]
 } as const;
 
+const carePlanSchema = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    conditionSummary: {
+      type: "string"
+    },
+    medicationGuidance: {
+      type: "array",
+      items: { type: "string" }
+    },
+    homeCareSteps: {
+      type: "array",
+      items: { type: "string" }
+    },
+    warningSigns: {
+      type: "array",
+      items: { type: "string" }
+    },
+    followUpRecommendation: {
+      type: "string"
+    }
+  },
+  required: [
+    "conditionSummary",
+    "medicationGuidance",
+    "homeCareSteps",
+    "warningSigns",
+    "followUpRecommendation"
+  ]
+} as const;
+
 type VisitPreparationInput = {
   symptoms: string;
   symptomDuration?: string;
@@ -84,6 +116,33 @@ type VisitPreparationInput = {
   medicalHistory?: string;
   visitGoals?: string;
 };
+
+type CarePlanInput = {
+  diagnosis: string;
+  prescription: string;
+  clinicalNotes: string;
+};
+
+function buildCarePlanFallback(input: CarePlanInput): CarePlanSummary {
+  return {
+    conditionSummary: `Your doctor documented ${input.diagnosis.trim()}. Review the consultation notes and follow the prescribed treatment plan.`,
+    medicationGuidance: [
+      `Take or use the prescribed treatment exactly as written: ${input.prescription.trim()}.`,
+      "If you have questions about dosage, timing, or side effects, contact your care team before making changes."
+    ],
+    homeCareSteps: [
+      "Follow the clinical instructions given during the consultation.",
+      "Keep track of how your symptoms change over the next few days.",
+      "Rest, stay hydrated when appropriate, and avoid triggers that worsen symptoms."
+    ],
+    warningSigns: [
+      "Seek urgent care if symptoms suddenly become severe or change quickly.",
+      "Contact your doctor sooner if new symptoms appear or treatment is not helping."
+    ],
+    followUpRecommendation:
+      "Review the medical record and contact your doctor if symptoms do not improve as expected or if you need clarification on the plan."
+  };
+}
 
 function buildVisitPrepFallback(input: VisitPreparationInput): VisitPrepAnalysis {
   const visitGoal =
@@ -236,4 +295,59 @@ export async function analyzeVisitPreparationWithLlm(
   }
 
   return JSON.parse(response.output_text) as VisitPrepAnalysis;
+}
+
+export async function analyzeCarePlanWithLlm(input: CarePlanInput): Promise<CarePlanSummary> {
+  const env = getServerEnv();
+
+  if (!env.LLM_API_KEY) {
+    return buildCarePlanFallback(input);
+  }
+
+  try {
+    const client = new OpenAI({
+      apiKey: env.LLM_API_KEY
+    });
+
+    const response = await client.responses.create({
+      model: env.LLM_MODEL ?? "gpt-4o-mini",
+      input: [
+        {
+          role: "system",
+          content: [
+            {
+              type: "input_text",
+              text:
+                "You are a cautious post-visit care plan assistant. Rewrite the doctor's record into patient-friendly instructions. Do not diagnose beyond the provided note, do not invent medications, and emphasize follow-up and warning signs."
+            }
+          ]
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: `Create a patient-friendly care plan from this medical record.\nDiagnosis: ${input.diagnosis}\nPrescription: ${input.prescription}\nClinical notes: ${input.clinicalNotes}`
+            }
+          ]
+        }
+      ],
+      text: {
+        format: {
+          type: "json_schema",
+          name: "post_visit_care_plan",
+          strict: true,
+          schema: carePlanSchema
+        }
+      }
+    });
+
+    if (!response.output_text) {
+      return buildCarePlanFallback(input);
+    }
+
+    return JSON.parse(response.output_text) as CarePlanSummary;
+  } catch {
+    return buildCarePlanFallback(input);
+  }
 }

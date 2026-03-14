@@ -347,7 +347,7 @@ export async function listCurrentPatientRecords(): Promise<MedicalRecordWithDoct
   const { data, error } = await supabase
     .from("medical_records")
     .select(
-      "id, appointment_id, doctor_id, patient_id, diagnosis, prescription, clinical_notes, created_at"
+      "id, appointment_id, doctor_id, patient_id, diagnosis, prescription, clinical_notes, ai_care_plan, created_at"
     )
     .eq("patient_id", patientProfile.id)
     .order("created_at", { ascending: false });
@@ -386,7 +386,7 @@ export async function listDoctorMedicalRecords(): Promise<MedicalRecordWithPatie
   const { data, error } = await supabase
     .from("medical_records")
     .select(
-      "id, appointment_id, doctor_id, patient_id, diagnosis, prescription, clinical_notes, created_at"
+      "id, appointment_id, doctor_id, patient_id, diagnosis, prescription, clinical_notes, ai_care_plan, created_at"
     )
     .eq("doctor_id", doctorProfile.id)
     .order("created_at", { ascending: false });

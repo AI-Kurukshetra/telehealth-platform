@@ -45,7 +45,8 @@ Run the SQL files in this order inside your Supabase SQL editor:
 6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
 7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
 8. [supabase/migrations/202603140008_add_visit_preparations.sql](/Users/apple/hackathon-project/supabase/migrations/202603140008_add_visit_preparations.sql)
-9. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+9. [supabase/migrations/202603140009_add_ai_care_plan_to_medical_records.sql](/Users/apple/hackathon-project/supabase/migrations/202603140009_add_ai_care_plan_to_medical_records.sql)
+10. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ### Supabase Auth settings
 
@@ -197,6 +198,14 @@ Implemented:
 - Doctor-side AI prep brief on the appointments workspace
 - Supabase-backed persistence for visit preparation data
 
+### AI care plan companion
+
+Implemented:
+
+- AI-generated post-visit care summary attached to medical records
+- Patient-friendly explanation of diagnosis, medications, home care, warning signs, and follow-up
+- Doctor-side review of the generated care plan inside patient records
+
 ### UI/UX
 
 Completed so far:
@@ -241,6 +250,7 @@ You can test these flows now:
 - Stripe payment sync via webhook and success-page reconciliation
 - LLM-backed symptom analysis
 - AI visit prep copilot save and review flow
+- AI care plan generation when doctors save medical records
 
 ### Works as UI/demo flow
 

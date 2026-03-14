@@ -46,7 +46,8 @@ Run these SQL files in Supabase SQL Editor in this order:
 6. [supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql](/Users/apple/hackathon-project/supabase/migrations/202603140006_allow_doctors_to_view_related_patients.sql)
 7. [supabase/migrations/202603140007_fix_recursive_appointments_policy.sql](/Users/apple/hackathon-project/supabase/migrations/202603140007_fix_recursive_appointments_policy.sql)
 8. [supabase/migrations/202603140008_add_visit_preparations.sql](/Users/apple/hackathon-project/supabase/migrations/202603140008_add_visit_preparations.sql)
-9. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
+9. [supabase/migrations/202603140009_add_ai_care_plan_to_medical_records.sql](/Users/apple/hackathon-project/supabase/migrations/202603140009_add_ai_care_plan_to_medical_records.sql)
+10. [supabase/seed.sql](/Users/apple/hackathon-project/supabase/seed.sql)
 
 ## 3. Start The App
 
@@ -177,6 +178,7 @@ The AI layer currently supports:
 
 1. symptom analysis for `/patient/symptom-checker`
 2. appointment-linked AI visit prep for `/patient/appointments`
+3. AI care plan companion for `/patient/records` and `/doctor/patient-records`
 
 Both features:
 
@@ -239,7 +241,8 @@ Use this exact order:
 5. Confirm pending payment retry works.
 6. Confirm AI analyzer returns structured output.
 7. Confirm AI visit prep saves for patients and appears for doctors.
-8. Confirm patient and doctor dashboards still load after these flows.
+8. Confirm AI care plans appear after a doctor saves a medical record.
+9. Confirm patient and doctor dashboards still load after these flows.
 
 ## 13. Useful Commands
 

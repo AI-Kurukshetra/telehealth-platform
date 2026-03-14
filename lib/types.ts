@@ -133,6 +133,7 @@ export interface MedicalRecord {
   diagnosis: string;
   prescription: string;
   clinical_notes: string;
+  ai_care_plan?: CarePlanSummary | null;
   created_at: string;
 }
 
@@ -174,4 +175,12 @@ export interface VisitPreparation {
   ai_summary: VisitPrepAnalysis;
   created_at: string;
   updated_at: string;
+}
+
+export interface CarePlanSummary {
+  conditionSummary: string;
+  medicationGuidance: string[];
+  homeCareSteps: string[];
+  warningSigns: string[];
+  followUpRecommendation: string;
 }
