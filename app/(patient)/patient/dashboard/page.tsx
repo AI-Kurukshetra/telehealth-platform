@@ -17,7 +17,7 @@ export default async function PatientDashboardPage() {
 
   return (
     <>
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MetricCard title="Upcoming appointments" value={String(upcomingCount)} description="Scheduled consultations in the next 7 days." />
         <MetricCard title="Medical records" value={String(records.length)} description="Visit summaries and prescriptions available online." />
         <MetricCard title="Unread messages" value={String(messageCount)} description="New secure messages waiting for your review." />

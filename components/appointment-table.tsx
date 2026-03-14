@@ -67,7 +67,7 @@ export function AppointmentTable({
 }) {
   return (
     <div className="overflow-x-auto">
-      <Table>
+      <Table className="min-w-[760px]">
         <TableHeader>
           <TableRow>
             <TableHead>{role === "patient" ? "Doctor" : "Patient"}</TableHead>

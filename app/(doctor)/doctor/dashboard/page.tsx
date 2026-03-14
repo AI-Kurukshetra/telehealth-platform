@@ -20,7 +20,7 @@ export default async function DoctorDashboardPage() {
 
   return (
     <>
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MetricCard title="Today queue" value={String(scheduledCount)} description="Consultations and follow-ups assigned for this doctor." />
         <MetricCard title="Pending notes" value={String(pendingNotesCount)} description="Appointments still waiting for a saved clinical record." />
         <MetricCard title="Unread messages" value={String(messageCount)} description="New patient messages waiting in your inbox." />

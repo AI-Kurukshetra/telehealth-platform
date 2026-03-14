@@ -14,10 +14,10 @@ export function DashboardShell({
 }) {
   return (
     <div className="min-h-screen">
-      <div className="container py-6">
+      <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 xl:px-8">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <Logo />
-          <div className="surface-panel flex items-center gap-3 rounded-full px-4 py-3">
+          <div className="surface-panel flex w-full items-center gap-3 rounded-full px-4 py-3 sm:w-auto">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary">
               <Bell className="h-4 w-4" />
             </div>
@@ -35,9 +35,9 @@ export function DashboardShell({
             </div>
           </div>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <div className="grid items-start gap-6 xl:grid-cols-[19rem_minmax(0,1fr)]">
           <AppSidebar items={items} title={title} />
-          <main className="space-y-6">{children}</main>
+          <main className="min-w-0 space-y-6">{children}</main>
         </div>
       </div>
     </div>
