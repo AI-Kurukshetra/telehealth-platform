@@ -10,7 +10,11 @@ export default async function DoctorLayout({
   await requireRole("doctor");
 
   return (
-    <DashboardShell items={DOCTOR_NAV_ITEMS} title="Doctor Workspace">
+    <DashboardShell
+      items={DOCTOR_NAV_ITEMS}
+      title="Doctor Workspace"
+      settingsPath="/doctor/settings"
+    >
       {children}
     </DashboardShell>
   );

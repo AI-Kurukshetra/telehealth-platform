@@ -35,7 +35,8 @@ export const PATIENT_NAV_ITEMS = [
   { href: "/patient/appointments", label: "Appointments" },
   { href: "/patient/messages", label: "Messages" },
   { href: "/patient/records", label: "Records" },
-  { href: "/patient/symptom-checker", label: "Symptom Checker" }
+  { href: "/patient/symptom-checker", label: "Symptom Checker" },
+  { href: "/patient/settings", label: "Settings" }
 ] as const;
 
 export const DOCTOR_NAV_ITEMS = [
@@ -43,5 +44,6 @@ export const DOCTOR_NAV_ITEMS = [
   { href: "/doctor/appointments", label: "Appointments" },
   { href: "/doctor/availability", label: "Availability" },
   { href: "/doctor/messages", label: "Messages" },
-  { href: "/doctor/patient-records", label: "Patient Records" }
+  { href: "/doctor/patient-records", label: "Patient Records" },
+  { href: "/doctor/settings", label: "Settings" }
 ] as const;

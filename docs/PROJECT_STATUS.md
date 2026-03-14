@@ -127,6 +127,7 @@ Implemented page structure:
 - `/patient/messages`
 - `/patient/records`
 - `/patient/symptom-checker`
+- `/patient/settings`
 
 ### Doctor app pages
 
@@ -134,8 +135,10 @@ Implemented page structure:
 
 - `/doctor/dashboard`
 - `/doctor/appointments`
+- `/doctor/availability`
 - `/doctor/messages`
 - `/doctor/patient-records`
+- `/doctor/settings`
 
 ### Database
 

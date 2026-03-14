@@ -10,7 +10,11 @@ export default async function PatientLayout({
   await requireRole("patient");
 
   return (
-    <DashboardShell items={PATIENT_NAV_ITEMS} title="Patient Portal">
+    <DashboardShell
+      items={PATIENT_NAV_ITEMS}
+      title="Patient Portal"
+      settingsPath="/patient/settings"
+    >
       {children}
     </DashboardShell>
   );
