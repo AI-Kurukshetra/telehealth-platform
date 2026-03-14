@@ -16,9 +16,9 @@ export function AppSidebar({
   const pathname = usePathname();
 
   return (
-    <aside className="surface-panel w-full rounded-[2rem] p-5 xl:sticky xl:top-6 xl:self-start">
-      <div className="mb-8 rounded-[1.6rem] bg-[linear-gradient(135deg,rgba(20,136,145,0.12),rgba(237,165,67,0.12))] p-4">
-        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+    <aside className="surface-panel panel-hover motion-fade-up w-full rounded-[2rem] p-5 xl:sticky xl:top-6 xl:self-start">
+      <div className="ai-highlight mb-8 rounded-[1.6rem] bg-[linear-gradient(135deg,rgba(20,136,145,0.12),rgba(237,165,67,0.12))] p-4">
+        <div className="pulse-ring mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
           <Activity className="h-5 w-5" />
         </div>
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
@@ -27,8 +27,11 @@ export function AppSidebar({
         <p className="mt-2 text-sm text-muted-foreground">
           One place for appointments, messaging, records, and virtual consultations.
         </p>
+        <div className="mt-4 inline-flex rounded-full border border-white/70 bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+          AI-enabled care
+        </div>
       </div>
-      <nav className="grid gap-2">
+      <nav className="motion-stagger grid gap-2">
         {items.map((item) => {
           const active = pathname === item.href;
 

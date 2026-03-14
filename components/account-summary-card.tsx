@@ -34,9 +34,9 @@ export async function AccountSummaryCard({
 
   if (mode === "compact") {
     return (
-      <div className="surface-panel flex w-full items-center justify-between gap-4 rounded-[1.8rem] px-4 py-3 sm:w-auto sm:min-w-[19rem]">
+      <div className="surface-panel panel-hover motion-fade-up flex w-full items-center justify-between gap-4 rounded-[1.8rem] px-4 py-3 sm:w-auto sm:min-w-[19rem]">
         <div className="flex min-w-0 items-center gap-3">
-          <Avatar className="h-11 w-11 border border-border/60 bg-white/90">
+          <Avatar className="pulse-ring h-11 w-11 border border-border/60 bg-white/90">
             <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
@@ -67,7 +67,7 @@ export async function AccountSummaryCard({
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14 border border-border/60 bg-white/90">
+            <Avatar className="pulse-ring h-14 w-14 border border-border/60 bg-white/90">
               <AvatarFallback className="text-base font-semibold">
                 {getInitials(user.full_name)}
               </AvatarFallback>
@@ -104,7 +104,7 @@ export async function AccountSummaryCard({
           </div>
         </div>
 
-        <div className="rounded-[1.4rem] bg-[#fffaf2] p-4">
+        <div className="ai-highlight rounded-[1.4rem] bg-[#fffaf2] p-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <ShieldCheck className="h-4 w-4 text-primary" />
             Account access

@@ -63,8 +63,8 @@ export default function HomePage() {
         </header>
 
         <section className="grid gap-8 py-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/65 px-4 py-2 text-sm font-medium text-secondary-foreground backdrop-blur">
+          <div className="motion-stagger space-y-8">
+            <div className="motion-fade-up inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/65 px-4 py-2 text-sm font-medium text-secondary-foreground backdrop-blur">
               <Sparkles className="h-4 w-4 text-primary" />
               Telehealth care coordination with AI-assisted intake
             </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               {stats.map((stat) => (
-                <div key={stat.label} className="surface-panel rounded-[1.75rem] px-5 py-4">
+                <div key={stat.label} className="surface-panel panel-hover motion-fade-up rounded-[1.75rem] px-5 py-4">
                   <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{stat.label}</p>
                   <p className="mt-3 text-3xl font-semibold">{stat.value}</p>
                 </div>
@@ -97,15 +97,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="surface-panel relative overflow-hidden rounded-[2.25rem] p-6">
+          <div className="surface-panel panel-hover motion-fade-up relative overflow-hidden rounded-[2.25rem] p-6">
             <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,rgba(20,136,145,0.14),transparent)]" />
             <div className="relative space-y-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <Badge className="rounded-full bg-white/80 text-primary">Connected care</Badge>
+                  <Badge className="rounded-full bg-white/80 text-primary">AI-first care</Badge>
                   <h2 className="mt-4 text-3xl font-semibold">Built for modern virtual care</h2>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-primary">
+                <div className="pulse-ring flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-primary">
                   <Stethoscope className="h-5 w-5" />
                 </div>
               </div>
@@ -119,7 +119,7 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {demoDoctors.map((doctor) => (
-                    <div key={doctor.id} className="flex items-center justify-between rounded-[1.4rem] bg-[#fffaf1] px-4 py-3">
+                    <div key={doctor.id} className="panel-hover flex items-center justify-between rounded-[1.4rem] bg-[#fffaf1] px-4 py-3">
                       <div>
                         <p className="font-semibold">{doctor.specialization}</p>
                         <p className="text-sm text-muted-foreground">${doctor.consultation_fee} consultation fee</p>
@@ -134,7 +134,7 @@ export default function HomePage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 {features.map((feature) => (
-                  <div key={feature.title} className="rounded-[1.75rem] border border-white/60 bg-white/60 p-5">
+                  <div key={feature.title} className="panel-hover rounded-[1.75rem] border border-white/60 bg-white/60 p-5">
                     <feature.icon className="mb-3 h-5 w-5 text-primary" />
                     <h3 className="font-semibold">{feature.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{feature.description}</p>

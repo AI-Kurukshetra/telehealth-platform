@@ -14,15 +14,19 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="dashboard-stage min-h-screen">
       <div className="mx-auto w-full max-w-[1480px] px-4 py-6 sm:px-6 xl:px-8">
-        <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          <Logo />
-          <AccountSummaryCard mode="compact" settingsPath={settingsPath} />
+        <div className="glass-divider mb-6 flex flex-col gap-4 pb-6 xl:flex-row xl:items-center xl:justify-between">
+          <div className="motion-fade-up">
+            <Logo />
+          </div>
+          <div className="motion-fade-up">
+            <AccountSummaryCard mode="compact" settingsPath={settingsPath} />
+          </div>
         </div>
         <div className="grid items-start gap-6 xl:grid-cols-[19rem_minmax(0,1fr)]">
           <AppSidebar items={items} title={title} />
-          <main className="min-w-0 space-y-6">{children}</main>
+          <main className="motion-stagger min-w-0 space-y-6">{children}</main>
         </div>
       </div>
     </div>

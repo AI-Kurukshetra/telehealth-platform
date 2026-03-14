@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-auto rounded-[1.6rem] border border-border/60 bg-white/60 p-2">
+    <div className="panel-hover relative w-full overflow-auto rounded-[1.6rem] border border-border/60 bg-white/60 p-2">
       <table className={cn("w-full caption-bottom text-sm", className)} {...props} />
     </div>
   );
@@ -21,7 +21,10 @@ export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTabl
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn("border-b border-border/50 transition-colors hover:bg-white/70", className)}
+      className={cn(
+        "border-b border-border/50 transition-[background-color,transform] duration-200 hover:bg-white/70",
+        className
+      )}
       {...props}
     />
   );
